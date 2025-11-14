@@ -1,8 +1,9 @@
-// components/Header/Header.tsx
+'use client';
+
 import Link from 'next/link';
 import css from './Header.module.css';
 
-const Header = () => {
+export function Header() {
   return (
     <header className={css.header}>
       <Link href="/" aria-label="Home">
@@ -20,6 +21,4 @@ const Header = () => {
       </nav>
     </header>
   );
-};
-
-export default Header;
+}

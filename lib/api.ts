@@ -1,64 +1,60 @@
-// lib/api.ts
-import axios from "axios";
-import { Note } from "@/types/note";
+import axios, { AxiosInstance } from 'axios';
+import type { Note, CreateNoteDto } from '@/types/note';
+import type { FetchNotesParams, NotesListResponse } from '@/types/api';
 
-interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
-}
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? 'https://notehub-public.goit.study/api';
+const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-interface CreateNoteProps {
-  title: string;
-  tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
-  content: string;
-}
-
-// створюємо СВОЮ інстанцію axios з правильними хедерами
-const api = axios.create({
-  baseURL: "https://notehub-public.goit.study/api",
+const instance: AxiosInstance = axios.create({
+  baseURL: API_URL,
   headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
-    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
   },
 });
 
-// ---- API functions ----
+interface ApiListResponse<T> {
+  notes: T[];
+  totalPages: number;
+}
 
-// GET /notes (з пошуком, пагінацією)
-export const fetchNotes = async (
-  search: string,
-  page: number,
-  perPage: number = 12
-): Promise<FetchNotesResponse> => {
-  // Формуємо querystring
-  // прикол: якщо search = "" то не шлемо search=
-  const params = new URLSearchParams({
-    page: String(page),
-    perPage: String(perPage),
-  });
 
-  if (search.trim() !== "") {
-    params.set("search", search.trim());
+export async function fetchNotes({
+  page,
+  search,
+  perPage = 8,
+}: FetchNotesParams): Promise<NotesListResponse> {
+  const params = new URLSearchParams();
+  params.set('page', String(page));
+  params.set('perPage', String(perPage));
+
+  
+  if (typeof search === 'string' && search.trim()) {
+    params.set('search', search.trim());
   }
 
-  const response = await api.get<FetchNotesResponse>(`/notes?${params.toString()}`);
-  return response.data;
-};
+  const { data } = await instance.get<ApiListResponse<Note>>(
+    `/notes?${params.toString()}`
+  );
 
-// POST /notes
-export const createNote = async (newNote: CreateNoteProps): Promise<Note> => {
-  const response = await api.post<Note>("/notes", newNote);
-  return response.data;
-};
+  return { notes: data.notes, totalPages: data.totalPages };
+}
 
-// DELETE /notes/:id
-export const deleteNote = async (id: Note["id"]): Promise<Note> => {
-  const response = await api.delete<Note>(`/notes/${id}`);
-  return response.data;
-};
 
-// GET /notes/:id
-export const fetchNoteById = async (id: Note["id"]): Promise<Note> => {
-  const response = await api.get<Note>(`/notes/${id}`);
-  return response.data;
-};
+export async function fetchNoteById(id: string): Promise<Note> {
+  const { data } = await instance.get<Note>(`/notes/${id}`);
+  return data;
+}
+
+
+export async function createNote(dto: CreateNoteDto): Promise<Note> {
+  const { data } = await instance.post<Note>('/notes', dto);
+  return data;
+}
+
+
+export async function deleteNote(id: string): Promise<Note> {
+  const { data } = await instance.delete<Note>(`/notes/${id}`);
+  return data;
+}

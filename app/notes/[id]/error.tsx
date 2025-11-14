@@ -1,17 +1,5 @@
-// app/notes/[id]/error.tsx
-
 'use client';
 
-interface Props {
-  error: Error;
+export default function NoteDetailsError({ error }: { error: Error }) {
+  return <p>Could not fetch note details. {error.message}</p>;
 }
-
-const Error = ({ error }: Props) => {
-  return (
-    <div>
-      <p>Could not fetch note details. {error.message}</p>
-    </div>
-  );
-};
-
-export default Error;
