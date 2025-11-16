@@ -4,12 +4,12 @@ import type { FetchNotesParams, NotesListResponse } from '@/types/api';
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? 'https://notehub-public.goit.study/api';
-const VITE_TMDB_TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
+const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 const instance: AxiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
-    Authorization: `Bearer ${VITE_TMDB_TOKEN}`,
+    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   },
 });
