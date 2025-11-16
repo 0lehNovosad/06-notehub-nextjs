@@ -1,34 +1,29 @@
-import { Note } from "@/types/note";
+import {
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api';
+import NoteDetailsClient from './NoteDetails.client';
 
-interface NotePageProps {
-  params: {
-    id: string;
-  };
-}
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
-export default async function NotePage({ params }: NotePageProps) {
-  const { id } = params;
+const NoteDetails = async ({ params }: Props) => {
+  const { id } = await params;
+  const queryClient = new QueryClient();
 
-  // захист від undefined
-  if (!id) {
-    return <div>Invalid note ID</div>;
-  }
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`);
-
-  if (!res.ok) {
-    return <div>Note not found</div>;
-  }
-
-  const note: Note = await res.json();
+  await queryClient.prefetchQuery({
+    queryKey: ['note', id],
+    queryFn: () => fetchNoteById(id),
+  });
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>{note.title}</h1>
-      <p>{note.description}</p>
-      <p>
-        <strong>Tag:</strong> {note.tag}
-      </p>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NoteDetailsClient />
+    </HydrationBoundary>
   );
-}
+};
+
+export default NoteDetails;
