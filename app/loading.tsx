@@ -1,7 +1,9 @@
-// app/loading.tsx
-
-const Loading = () => {
-  return <p>Loading, please wait...</p>;
+const loading = () => {
+  return (
+    <div>
+      <p>Loading, please wait...</p>
+    </div>
+  );
 };
 
-export default Loading;
+export default loading;

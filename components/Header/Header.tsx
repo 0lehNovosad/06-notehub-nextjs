@@ -1,6 +1,5 @@
-// components/Header/Header.tsx
-import Link from 'next/link';
-import css from './Header.module.css';
+import css from "./Header.module.css";
+import Link from "next/link";
 
 const Header = () => {
   return (

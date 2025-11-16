@@ -1,5 +1,5 @@
-// components/Footer/Footer.tsx
-import css from './Footer.module.css';
+import css from "./Footer.module.css";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -10,7 +10,7 @@ const Footer = () => {
           <p>Developer: Oleh Novosad</p>
           <p>
             Contact us:
-            <a href="mailto:student@notehub.app"> student@notehub.app</a>
+            <Link href="mailto:student@notehub.app">student@notehub.app</Link>
           </p>
         </div>
       </div>

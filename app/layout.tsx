@@ -1,24 +1,24 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
-import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'NoteHub',
+  title: "NoteHub App",
   description:
-    'A simple and efficient application designed for managing personal notes',
+    "NoteHub is a simple and efficient application designed for managing personal notes",
 };
 
 export default function RootLayout({
@@ -31,11 +31,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <TanStackProvider>
           <Header />
-
           <main>{children}</main>
-
           <Footer />
         </TanStackProvider>
+        <div id="modalRoot"></div>
       </body>
     </html>
   );
